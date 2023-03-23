@@ -57,7 +57,6 @@ const cache = new NodeCache({ stdTTL: 60 });
 // Define a POST endpoint for sending emails
 const schema = Joi.object({
     recipients: Joi.array().items(Joi.string().email()).min(1).required(),
-    message_text: Joi.string().min(1).required(),
     message_html: Joi.string().min(1).required(),
     subject: Joi.string().min(1).required(),
 });
@@ -70,13 +69,12 @@ app.post('/send-email', (req, res) => {
             return res.status(400).json({ error: error.details[0].message });
         }
 
-        const { recipients, message_text, message_html, subject } = value;
+        const { recipients, message_html, subject } = value;
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: recipients.join(', '),
             subject: subject,
-            text: message_text,
             html: message_html
         };
 
@@ -117,8 +115,9 @@ function updateCache() {
 setInterval(updateCache, 10000);
 
 // Define a route that retrieves data from the cache
-app.post("active_email/", (req, res) => {
+app.post("/active_email", (req, res) => {
     try {
+        console.log("Activate", req.query.email)
         return res.status(200).json(cache.set(req.query.email, "", 30))
     } catch (err) {
         console.log(err)
@@ -127,11 +126,11 @@ app.post("active_email/", (req, res) => {
 });
 
 // Define a route that retrieves data from the cache
-app.get("users/", (req, res) => {
+app.get("/users", (req, res) => {
     try {
         return res.status(200).json({
             "online_users": cache.keys().map(key => cache.getTtl(key) > 0 ? 1 : 0).reduce((a, b) => a + b, -1),
-            "all_users": cache.get("available_user")
+            "all_users": parseInt(cache.get("available_user"))
         })
     } catch (err) {
         console.log(err)

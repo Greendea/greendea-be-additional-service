@@ -1,3 +1,8 @@
 /node_modules
 /.sfdx
+
+
 .env
+.env.example
+.env.local
+.env.staging

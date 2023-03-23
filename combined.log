@@ -1,0 +1,3 @@
+{"level":"info","message":"HTTP GET /users \u001b[33m404\u001b[39m 4ms","meta":{}}
+{"level":"info","message":"HTTP GET /users \u001b[33m404\u001b[39m 1ms","meta":{}}
+{"level":"info","message":"HTTP GET /favicon.ico \u001b[33m404\u001b[39m 3ms","meta":{}}
